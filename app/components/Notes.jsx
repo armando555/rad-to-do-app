@@ -1,14 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
-const Note = (data) => {
-    const [notes, setNotes] = useState([]);
-    const {inputVal,setInputVal} = useState('');
+const Note = ({data,onDelete}) => {
+    const {date, note} = data;
     return (
         <View style={styles.note}>
-            <Text style={styles.noteText}>Date</Text>
-            <Text style={styles.noteText}>Note</Text>
-            <TouchableOpacity style={styles.noteDelete}>
+            <Text style={styles.noteText}>{date}</Text>
+            <Text style={styles.noteText}>{note}</Text>
+            <TouchableOpacity onPress={onDelete} style={styles.noteDelete}>
                 <Text style={styles.noteDeleteText}>X</Text>
             </TouchableOpacity>
         </View>

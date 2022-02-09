@@ -1,27 +1,51 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import Note from './Notes';
 
 const Main = () => {
+    const [notes, setNotes] = useState([]);
+    const [inputVal, setInputVal ] = useState('');
+ 
+    const addNote = useCallback(()=>{
+        if(inputVal.length){
+            const d = new Date();
+            const payload = {
+                date: `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}`,
+                note: inputVal,
+            };
+            setNotes([payload,...notes]);
+            setInputVal('');
+        }
+    },[notes,inputVal]);
+
+
+    const onDelete = useCallback((i)=>()=>{
+        notes.splice(i,1);
+        setNotes([...notes]);
+    },[notes]);
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.headerText}>RAD TO DO's</Text>
             </View>
             <ScrollView style={styles.scrollContainer}>
-                <Note/>
+                {notes.map((item,i) => (
+                    <Note key={i} data={item} onDelete={onDelete(i)}/>
+                ))}
             </ScrollView>
             <View style={styles.footer}>
                 <TextInput
-                    onChangeText={(userInput)=> setInputVal(userInput)}
+                    onChangeText={(userInput) => setInputVal(userInput)}
+                    value={inputVal}
                     style={styles.textInput}
                     placerholder="> add something rad..."
                     placeholderTextColor='red'
-                    underlineColorAndroid="transparent"
+                    
                 >
                 </TextInput>
             </View>
-            <TouchableOpacity style={styles.addButton}>
+            <TouchableOpacity onPress={addNote} style={styles.addButton}>
                 <Text style={styles.addButtonText}>+</Text>
             </TouchableOpacity>
         </View>
